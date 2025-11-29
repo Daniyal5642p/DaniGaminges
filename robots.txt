@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://Daniyal5642p.github.io/DaniGaminges/sitemap.xml
