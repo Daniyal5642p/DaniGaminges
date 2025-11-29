@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game</title>
+<meta name="description" content="Game website with mini click game, animated ads, neon ads, hacker matrix, and app-style UI. Created by Daniyal.">
+<meta name="keywords" content="Game, Mini Game, HTML, JavaScript, Ads Demo, Neon Ads, Hacker Theme, App UI">
+<meta name="author" content="Daniyal">
+<style>
+  :root {
+    --bg:#0f1724; --card:#111827; --muted:#9aa7bf; --accent:#06b6d4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#071022 0%,#0b1220 100%);color:#e6eef8}
+  header{display:flex;gap:8px;align-items:center;padding:12px 14px;background:linear-gradient(90deg,#071126 0%, #071022 100%);position:sticky;top:0;z-index:50}
+  header h1{margin:0;font-size:16px;font-weight:600;color:var(--accent)}
+  .menu{margin-left:12px;display:flex;gap:6px;flex-wrap:wrap}
+  .menu button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+  .menu button.active{background:rgba(255,255,255,0.04);color:#fff;border-color:rgba(255,255,255,0.12)}
+  main{padding:18px}
+  .demo{display:none}
+  .demo.active{display:block}
+  .ad-split{display:flex;gap:12px;align-items:stretch}
+  .ad-col{flex:1;display:flex;flex-direction:column;gap:12px}
+  .ad-box{background:linear-gradient(180deg,#e9eef6 0%,#dfe9f6 100%);color:#08233b;border-radius:10px;min-height:180px;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font-weight:700}
+  .ad-box img{max-width:100%;border-radius:6px}
+  @media only screen and (max-width:700px){.ad-split{flex-direction:column}.ad-box{min-height:200px}header{padding:10px}.menu button{padding:7px 8px}}
+  .fake-ad{background:linear-gradient(90deg,#ffd96d,#ff7b7b);color:#071126;padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
+  .fake-label{font-size:12px;opacity:0.8;margin-bottom:8px}
+  .anim-banner{width:100%;height:120px;border-radius:10px;overflow:hidden;position:relative;background:#111}
+  .anim-banner .strip{position:absolute;left:-50%;top:0;height:100%;width:200%;display:flex;gap:12px;align-items:center;padding:0 20px;animation:slide 8s linear infinite}
+  .anim-banner .tile{min-width:280px;padding:12px;border-radius:8px;background:linear-gradient(135deg,#ff8a8a,#ffd08a);font-weight:700}
+  @keyframes slide{to{left:0} from{left:-50%}}
+  .neon-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .neon-card{background:rgba(255,255,255,0.02);border-radius:12px;padding:18px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+  .neon-glow{font-size:18px;color:#fff;text-shadow:0 0 18px #ff4d6d,0 0 36px #7c00ff;border-radius:8px;padding:10px;background:linear-gradient(90deg, rgba(124,0,255,0.12), rgba(255,77,109,0.08))}
+  @media (max-width:700px){.neon-wrap{grid-template-columns:1fr}}
+  .hacker-stage{position:relative;min-height:300px;border-radius:12px;overflow:hidden;background:#000}
+  .matrix-canvas{position:absolute;inset:0}
+  .hacker-ad{position:absolute;left:12px;top:12px;width:160px;background:rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:#fff}
+  .hacker-ad.right{right:12px;left:auto}
+  .game-area{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .game-canvas{background:#071022;border-radius:12px;padding:8px}
+  .game-panel{min-width:220px;background:linear-gradient(180deg,#081223,#0b2541);padding:12px;border-radius:10px}
+  .btn{display:inline-block;padding:10px 12px;background:var(--accent);color:#001;border-radius:8px;font-weight:700;cursor:pointer}
+  .app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .app-card{background:linear-gradient(180deg,#0b1220,#071022);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+  .small-ad{height:120px;border-radius:8px;background:linear-gradient(90deg,#ffe5b4,#ffd1d1);display:flex;align-items:center;justify-content:center;font-weight:700;color:#08233b}
+</style>
+</head>
+<body>
+<header>
+  <h1>Game</h1>
+  <nav class="menu" aria-label="Demos">
+    <button class="tab-btn active" data-show="fake">1 Fake Ads</button>
+    <button class="tab-btn" data-show="anim">2 Animated</button>
+    <button class="tab-btn" data-show="neon">3 Neon</button>
+    <button class="tab-btn" data-show="hacker">4 Hacker</button>
+    <button class="tab-btn" data-show="game">5 Mini Game</button>
+    <button class="tab-btn" data-show="app">6 App UI</button>
+  </nav>
+</header>
+
+<main>
+  <section id="fake" class="demo active">
+    <h2>Fake Ads — Left & Right Big</h2>
+    <div class="ad-split" style="margin-bottom:18px">
+      <div class="ad-col">
+        <div class="ad-box fake-ad">
+          <div>
+            <div class="fake-label">Sponsored — Example</div>
+            <div style="font-size:20px">Amazing Phone — 40% OFF</div>
+            <div style="font-size:12px;opacity:0.9;margin-top:8px">Tap to view offer</div>
+          </div>
+        </div>
+      </div>
+      <div class="ad-col">
+        <div class="ad-box fake-ad">
+          <div>
+            <div class="fake-label">Sponsored — Example</div>
+            <div style="font-size:20px">Game Boost — Free Gems</div>
+            <div style="font-size:12px;opacity:0.9;margin-top:8px">Install now</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="anim" class="demo">
+    <h2>Animated Banner Ads</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px">
+        <div class="anim-banner">
+          <div class="strip">
+            <div class="tile">🔥 Super Sale — 70% OFF</div>
+            <div class="tile">🎧 Headphones — Buy 1 Get 1</div>
+            <div class="tile">📱 New Phone — Preorder</div>
+            <div class="tile">🎮 Game Event — Claim</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div class="ad-box" style="min-height:260px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center">
+          <div class="fake-label" style="color:#123">Auto-rotating ad</div>
+          <div style="width:100%"><img src="https://via.placeholder.com/420x200/ffe19b/081122?text=Animated+Ad" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="neon" class="demo">
+    <h2>Neon Glowing Ads & UI</h2>
+    <div class="neon-wrap" style="margin-top:12px">
+      <div class="neon-card">
+        <div class="neon-glow">NEON SALE — Limited Time</div>
+        <div style="margin-top:12px;color:var(--muted)">Makes your ad glow like neon — great for gaming pages.</div>
+        <div style="height:12px"></div>
+        <div class="ad-box" style="background:linear-gradient(90deg,#ffd1ff,#c7f3ff);color:#071126">
+          <div style="font-size:20px">Action Game — Install</div>
+        </div>
+      </div>
+      <div class="neon-card">
+        <div class="neon-glow">SHOWCASE</div>
+        <div style="margin-top:12px;color:var(--muted)">Use neon for featured sponsor ad panels.</div>
+        <div style="height:12px"></div>
+        <div class="ad-box" style="background:linear-gradient(90deg,#c8ffea,#e8d1ff);color:#071126">
+          <div style="font-size:20px">Music App — Stream Now</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hacker" class="demo">
+    <h2>Hacker Style — Matrix Rain + Ads</h2>
+    <div class="hacker-stage" style="margin-top:12px;border-radius:12px">
+      <canvas id="matrix" class="matrix-canvas"></canvas>
+      <div class="hacker-ad">AD: VPN Pro — Secure</div>
+      <div class="hacker-ad right">AD: Cyber Tool — Free Trial</div>
+    </div>
+  </section>
+
+  <section id="game" class="demo">
+    <h2>Mini Click Game + Left/Right Ads</h2>
+    <div class="game-area" style="margin-top:12px">
+      <div class="game-canvas" style="flex:1;min-width:260px">
+        <canvas id="gameCanvas" width="420" height="300" style="display:block;border-radius:10px;background:#001122"></canvas>
+      </div>
+      <div class="game-panel">
+        <div style="margin-bottom:10px;color:var(--muted)">Score: <span id="score">0</span></div>
+        <button id="clickBtn" class="btn">Click Me!</button>
+        <div style="height:14px"></div>
+        <div style="margin-top:10px">
+          <div class="small-ad">LEFT AD (Game)</div>
+          <div style="height:10px"></div>
+          <div class="small-ad">RIGHT AD (Game)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="app" class="demo">
+    <h2>App-style UI with Ads</h2>
+    <div class="app-grid" style="margin-top:12px">
+      <div class="app-card">
+        <h3 style="margin:0 0 8px 0;color:var(--accent)">Featured</h3>
+        <div class="small-ad">Featured Sponsor</div>
+        <p style="color:var(--muted);margin-top:8px">Great for app-home screens.</p>
+      </div>
+      <div class="app-card">
+        <h3 style="margin:0 0 8px 0;color:#ffd166">Top Game</h3>
+        <div class="small-ad">Top Game Ad</div>
+        <p style="color:var(--muted);margin-top:8px">Tap to install — sample card layout.</p>
+      </div>
+      <div class="app-card">
+        <h3 style="margin:0 0 8px 0;color:#7afcff">Music</h3>
+        <div class="small-ad">Music App</div>
+        <p style="color:var(--muted);margin-top:8px">Grid of app cards with ad slots.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const show=btn.dataset.show;
+    document.querySelectorAll('.demo').forEach(d=>d.classList.remove('active'));
+    document.getElementById(show).classList.add('active');
+  });
+});
+
+(function matrix(){
+  const canvas=document.getElementById('matrix');
+  const ctx=canvas.getContext('2d');
+  function resize(){canvas.width=canvas.clientWidth;canvas.height=320;}
+  window.addEventListener('resize',resize);
+  resize();
+  const cols=Math.floor(canvas.width/14);
+  const drops=new Array(cols).fill(1);
+  function draw(){
+    ctx.fillStyle='rgba(0,0,0,0.06)';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#0f0';ctx.font='14px monospace';
+    for(let i=0;i<cols;i++){
+      const text=String.fromCharCode(0x30A0+Math.random()*96);
+      ctx.fillText(text,i*14,drops[i]*14);
+      if(drops[i]*14>canvas.height && Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+(function game(){
+  const canvas=document.getElementById('gameCanvas');
+  const ctx=canvas.getContext('2d');
+  let score=0;
+  const scoreEl=document.getElementById('score');
+  const btn=document.getElementById('clickBtn');
+  const circles=[];
+  for(let i=0;i<6;i++) circles.push({x:Math.random()*400,y:Math.random()*260,r:14+Math.random()*18,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2});
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#001';ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(const c of circles){
+      c.x+=c.vx;c.y+=c.vy;
+      if(c.x<0||c.x>canvas.width)c.vx*=-1;
+      if(c.y<0||c.y>canvas.height)c.vy*=-1;
+      ctx.beginPath();
+      const g=ctx.createRadialGradient(c.x,c.y,2,c.x,c.y,c.r);
+      g.addColorStop(0,'#5eead4');g.addColorStop(1,'#06b6d4');
+      ctx.fillStyle=g;
+      ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+      ctx.fill();
+      ctx.closePath();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+  canvas.addEventListener('click',function(e){
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+    for(let i=circles.length-1;i>=0;i--){
+      const c=circles[i];
+      const dist=Math.hypot(c.x-mx,c.y-my);
+      if(dist<c.r){
+        score+=Math.round(10+(20*(1-dist/c.r)));
+        scoreEl.textContent=score;
+        c.x=Math.random()*canvas.width;c.y=Math.random()*canvas.height;
+      }
+    }
+  });
+  btn.addEventListener('click',()=>{score+=1;scoreEl.textContent=score;});
+})();
+</script>
+</body>
+</html>
